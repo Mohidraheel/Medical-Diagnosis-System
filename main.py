@@ -167,7 +167,7 @@ class MedicalDiagnosisApp:
         search_header = tk.Frame(sf, bg=BG_CARD)
         search_header.pack(fill="x", pady=(0, 8))
         
-        tk.Label(search_header, text="🔍", 
+        tk.Label(search_header, text="", 
                  font=("Segoe UI", 16),
                  bg=BG_CARD, fg=ACCENT_BLUE).pack(side="left", padx=(0, 8))
         
@@ -199,7 +199,7 @@ class MedicalDiagnosisApp:
         list_header = tk.Frame(lf, bg=BG_ELEVATED, pady=12, padx=16)
         list_header.pack(fill="x")
         
-        tk.Label(list_header, text="📋  Select Symptoms",
+        tk.Label(list_header, text="Select Symptoms",
                  font=("Segoe UI", 12, "bold"),
                  bg=BG_ELEVATED, fg=ACCENT_BLUE).pack(side="left")
 
@@ -233,7 +233,7 @@ class MedicalDiagnosisApp:
         bf.pack(fill="x", pady=(0, 12))
 
         self._btn_diagnose = HoverButton(
-            bf, text="✓  Diagnose", 
+            bf, text="Diagnose", 
             bg=ACCENT_BLUE, 
             hover_bg=ACCENT_BLUE_LIGHT,
             fg=BG_DARK,
@@ -245,7 +245,7 @@ class MedicalDiagnosisApp:
             command=self._diagnose)
         self._btn_diagnose.pack(side="left", fill="x", expand=True, padx=(0, 8))
 
-        HoverButton(bf, text="✕  Clear", 
+        HoverButton(bf, text="Clear", 
                     bg=ACCENT_RED,
                     hover_bg="#ff6b6b",
                     fg=BG_DARK,
@@ -283,7 +283,7 @@ class MedicalDiagnosisApp:
         header = tk.Frame(dc, bg=BG_CARD)
         header.pack(fill="x", pady=(0, 12))
         
-        tk.Label(header, text="🎯",
+        tk.Label(header, text="",
                  font=("Segoe UI", 20),
                  bg=BG_CARD, fg=ACCENT_GREEN).pack(side="left", padx=(0, 10))
         
@@ -335,7 +335,7 @@ class MedicalDiagnosisApp:
         chart_header = tk.Frame(cf, bg=BG_ELEVATED, pady=12, padx=16)
         chart_header.pack(fill="x")
         
-        tk.Label(chart_header, text="📊  Top-10 Disease Probabilities",
+        tk.Label(chart_header, text="Top-10 Disease Probabilities",
                  font=("Segoe UI", 12, "bold"),
                  bg=BG_ELEVATED, fg=ACCENT_BLUE).pack(side="left")
 
@@ -392,7 +392,7 @@ class MedicalDiagnosisApp:
 
     def _update_badge(self):
         n = sum(1 for v in self.selected.values() if v.get())
-        self.badge_var.set(f"✓ {n} symptom{'s' if n != 1 else ''} selected")
+        self.badge_var.set(f"{n} symptom{'s' if n != 1 else ''} selected")
 
     def _get_input_vector(self):
         vec = np.zeros(len(self.symptoms))
@@ -422,7 +422,7 @@ class MedicalDiagnosisApp:
 
         # ── Update result card ───────────────
         self.disease_var.set(best_disease)
-        self.conf_var.set(f"⭐ Confidence: {best_conf:.1f}%")
+        self.conf_var.set(f"Confidence: {best_conf:.1f}%")
 
         used = [fmt(s) for s in self.symptoms
                 if self.selected.get(s) and self.selected[s].get()]
@@ -435,7 +435,7 @@ class MedicalDiagnosisApp:
         for v in self.selected.values():
             v.set(False)
         self.badge_var.set("0 symptoms selected")
-        self.disease_var.set("— Awaiting Input —")
+        self.disease_var.set("Awaiting Input")
         self.conf_var.set("")
         self.symp_used_var.set("")
         self._draw_empty_chart()
