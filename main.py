@@ -21,15 +21,10 @@ matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-# ─────────────────────────────────────────────
-# Resolve dataset path (same folder as script)
-# ─────────────────────────────────────────────
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 DATASET_PATH = os.path.join(SCRIPT_DIR, "Disease_symptom_dataset.csv")
 
-# ─────────────────────────────────────────────
-# Enhanced colour palette with gradients
-# ─────────────────────────────────────────────
+
 BG_DARK      = "#0a0e12"
 BG_CARD      = "#161b22"
 BG_HOVER     = "#1f2937"
@@ -47,9 +42,6 @@ BORDER_LIGHT = "#484f58"
 TAG_BG       = "#1f6feb"
 SHADOW       = "#000000"
 
-# ─────────────────────────────────────────────
-# Load & train the Bayesian model
-# ─────────────────────────────────────────────
 def load_and_train(path):
     df = pd.read_csv(path)
     df["prognosis"] = df["prognosis"].str.strip()
@@ -62,16 +54,11 @@ def load_and_train(path):
     symptoms = list(X.columns)
     return model, le, symptoms
 
-# ─────────────────────────────────────────────
-# Symptom display name helper
-# ─────────────────────────────────────────────
+
 def fmt(s):
     return s.replace("_", " ").title()
 
 
-# ═════════════════════════════════════════════
-# Custom styled widgets
-# ═════════════════════════════════════════════
 class HoverButton(tk.Button):
     """Button with hover effects"""
     def __init__(self, parent, **kwargs):
@@ -94,9 +81,6 @@ class StyledFrame(tk.Frame):
         super().__init__(parent, **kwargs)
 
 
-# ═════════════════════════════════════════════
-# Main Application Window
-# ═════════════════════════════════════════════
 class MedicalDiagnosisApp:
 
     def __init__(self, root, model, le, symptoms):
@@ -104,9 +88,9 @@ class MedicalDiagnosisApp:
         self.model     = model
         self.le        = le
         self.symptoms  = symptoms
-        self.selected  = {}          # symptom → BooleanVar
+        self.selected  = {}          
         self.search_var = tk.StringVar()
-        self.search_var.trace("w", self._filter_symptoms)
+        self.search_var.trace_add("write", self._filter_symptoms)
 
         root.title("Medical Diagnosis System — FAST-NUCES Karachi")
         root.configure(bg=BG_DARK)
@@ -115,13 +99,12 @@ class MedicalDiagnosisApp:
 
         self._build_ui()
 
-    # ── UI Construction ──────────────────────
+    
     def _build_ui(self):
-        # ── Header with gradient effect ──────
         header = tk.Frame(self.root, bg=BG_ELEVATED, pady=20)
         header.pack(fill="x")
 
-        # Title with icon
+        
         title_frame = tk.Frame(header, bg=BG_ELEVATED)
         title_frame.pack()
         
@@ -140,11 +123,11 @@ class MedicalDiagnosisApp:
                  text="Bayesian Network Classification  •  FAST-NUCES Karachi  •  AI Section 6B",
                  font=("Segoe UI", 10), bg=BG_ELEVATED, fg=TEXT_MUTED).pack(anchor="w", pady=(2, 0))
 
-        # Decorative line
+        
         separator = tk.Frame(self.root, height=3, bg=ACCENT_BLUE)
         separator.pack(fill="x")
 
-        # ── Body (left panel + right panel) ─
+        
         body = tk.Frame(self.root, bg=BG_DARK)
         body.pack(fill="both", expand=True, padx=20, pady=20)
 
@@ -156,7 +139,7 @@ class MedicalDiagnosisApp:
         left.pack(side="left", fill="both", padx=(0, 15))
         left.pack_propagate(False)
 
-        # ── Search with modern styling ───────
+        
         search_container = StyledFrame(left, bg=BG_DARK)
         search_container.pack(fill="x", pady=(0, 15))
         
@@ -175,7 +158,7 @@ class MedicalDiagnosisApp:
                  font=("Segoe UI", 12, "bold"),
                  bg=BG_CARD, fg=TEXT_PRIMARY).pack(side="left")
 
-        # Search entry with better styling
+        
         entry_frame = tk.Frame(sf, bg=BG_HOVER, highlightbackground=BORDER_LIGHT,
                                highlightthickness=1)
         entry_frame.pack(fill="x")
@@ -187,7 +170,7 @@ class MedicalDiagnosisApp:
                          bd=8)
         entry.pack(fill="x")
 
-        # ── Symptom list with modern card ────
+        
         list_container = StyledFrame(left, bg=BG_DARK)
         list_container.pack(fill="both", expand=True, pady=(0, 15))
         
@@ -195,7 +178,7 @@ class MedicalDiagnosisApp:
                       highlightbackground=BORDER_LIGHT, highlightthickness=2)
         lf.pack(fill="both", expand=True)
         
-        # List header
+        
         list_header = tk.Frame(lf, bg=BG_ELEVATED, pady=12, padx=16)
         list_header.pack(fill="x")
         
@@ -203,7 +186,7 @@ class MedicalDiagnosisApp:
                  font=("Segoe UI", 12, "bold"),
                  bg=BG_ELEVATED, fg=ACCENT_BLUE).pack(side="left")
 
-        # Scrollable symptom area
+        
         scroll_container = tk.Frame(lf, bg=BG_CARD)
         scroll_container.pack(fill="both", expand=True, padx=2, pady=2)
         
@@ -228,7 +211,7 @@ class MedicalDiagnosisApp:
 
         self._populate_symptoms(self.symptoms)
 
-        # ── Buttons with enhanced styling ────
+        
         bf = tk.Frame(left, bg=BG_DARK)
         bf.pack(fill="x", pady=(0, 12))
 
@@ -256,7 +239,7 @@ class MedicalDiagnosisApp:
                     padx=16, pady=12,
                     command=self._clear).pack(side="left", fill="x", expand=True)
 
-        # ── Enhanced badge ───────────────────
+        
         badge_frame = tk.Frame(left, bg=BG_CARD, 
                                highlightbackground=BORDER, highlightthickness=1)
         badge_frame.pack(fill="x")
@@ -271,7 +254,7 @@ class MedicalDiagnosisApp:
         right = tk.Frame(parent, bg=BG_DARK)
         right.pack(side="left", fill="both", expand=True)
 
-        # ── Enhanced diagnosis card ───────────
+        
         dc_container = StyledFrame(right, bg=BG_DARK)
         dc_container.pack(fill="x", pady=(0, 15))
         
@@ -279,7 +262,7 @@ class MedicalDiagnosisApp:
                       highlightbackground=BORDER_LIGHT, highlightthickness=2)
         dc.pack(fill="x")
 
-        # Card header
+        
         header = tk.Frame(dc, bg=BG_CARD)
         header.pack(fill="x", pady=(0, 12))
         
@@ -291,7 +274,7 @@ class MedicalDiagnosisApp:
                  font=("Segoe UI", 13, "bold"),
                  bg=BG_CARD, fg=TEXT_MUTED).pack(side="left")
 
-        # Disease name with larger, more prominent display
+        
         self.disease_var = tk.StringVar(value="— Awaiting Input —")
         disease_label = tk.Label(dc, textvariable=self.disease_var,
                  font=("Segoe UI", 26, "bold"),
@@ -299,7 +282,7 @@ class MedicalDiagnosisApp:
                  wraplength=700, justify="left")
         disease_label.pack(anchor="w", pady=(0, 8))
 
-        # Confidence with progress bar style
+        
         conf_frame = tk.Frame(dc, bg=BG_CARD)
         conf_frame.pack(fill="x", pady=(0, 12))
         
@@ -308,7 +291,7 @@ class MedicalDiagnosisApp:
                  font=("Segoe UI", 13, "bold"),
                  bg=BG_CARD, fg=ACCENT_YELL).pack(side="left")
 
-        # Symptoms used section
+        
         symp_header = tk.Frame(dc, bg=BG_ELEVATED, pady=8, padx=12)
         symp_header.pack(fill="x", pady=(0, 4))
         
@@ -323,7 +306,6 @@ class MedicalDiagnosisApp:
                  wraplength=700, justify="left"
                  ).pack(anchor="w", padx=12)
 
-        # ── Enhanced probability chart ────────
         cf_container = StyledFrame(right, bg=BG_DARK)
         cf_container.pack(fill="both", expand=True)
         
@@ -331,7 +313,7 @@ class MedicalDiagnosisApp:
                       highlightbackground=BORDER_LIGHT, highlightthickness=2)
         cf.pack(fill="both", expand=True)
         
-        # Chart header
+        
         chart_header = tk.Frame(cf, bg=BG_ELEVATED, pady=12, padx=16)
         chart_header.pack(fill="x")
         
@@ -339,7 +321,7 @@ class MedicalDiagnosisApp:
                  font=("Segoe UI", 12, "bold"),
                  bg=BG_ELEVATED, fg=ACCENT_BLUE).pack(side="left")
 
-        # Chart area
+        
         chart_bg = tk.Frame(cf, bg=BG_CARD)
         chart_bg.pack(fill="both", expand=True, padx=2, pady=2)
 
@@ -352,7 +334,7 @@ class MedicalDiagnosisApp:
         self.canvas_widget.get_tk_widget().pack(fill="both", expand=True,
                                                  padx=12, pady=12)
 
-    # ── Helpers ──────────────────────────────
+    
     def _populate_symptoms(self, symp_list):
         for w in self.symp_frame.winfo_children():
             w.destroy()
@@ -361,7 +343,7 @@ class MedicalDiagnosisApp:
             if s not in self.selected:
                 self.selected[s] = tk.BooleanVar()
 
-            # Alternating row colors for better readability
+            
             row_bg = BG_CARD if i % 2 == 0 else BG_ELEVATED
             row = tk.Frame(self.symp_frame, bg=row_bg, pady=2)
             row.pack(fill="x")
@@ -381,7 +363,7 @@ class MedicalDiagnosisApp:
             )
             cb.pack(fill="x")
             
-            # Hover effect
+            
             cb.bind("<Enter>", lambda e, r=row: r.config(bg=BG_HOVER))
             cb.bind("<Leave>", lambda e, r=row, bg=row_bg: r.config(bg=bg))
 
@@ -401,7 +383,7 @@ class MedicalDiagnosisApp:
                 vec[i] = 1
         return vec
 
-    # ── Diagnosis ────────────────────────────
+    
     def _diagnose(self):
         vec = self._get_input_vector()
         n_selected = int(vec.sum())
@@ -420,7 +402,7 @@ class MedicalDiagnosisApp:
         best_disease = top_name[0]
         best_conf    = top_prob[0] * 100
 
-        # ── Update result card ───────────────
+        
         self.disease_var.set(best_disease)
         self.conf_var.set(f"Confidence: {best_conf:.1f}%")
 
@@ -428,7 +410,7 @@ class MedicalDiagnosisApp:
                 if self.selected.get(s) and self.selected[s].get()]
         self.symp_used_var.set(", ".join(used))
 
-        # ── Update chart ─────────────────────
+        
         self._update_chart(top_name, top_prob * 100)
 
     def _clear(self):
@@ -441,7 +423,7 @@ class MedicalDiagnosisApp:
         self._draw_empty_chart()
         self.canvas_widget.draw()
 
-    # ── Chart helpers ─────────────────────────
+    
     def _draw_empty_chart(self):
         self.ax.clear()
         self.ax.set_facecolor(BG_CARD)
@@ -459,13 +441,13 @@ class MedicalDiagnosisApp:
         self.ax.clear()
         self.ax.set_facecolor(BG_CARD)
 
-        # Gradient colors
+        
         colors = []
         for i, prob in enumerate(probs):
             if i == 0:
                 colors.append(ACCENT_GREEN_LIGHT)
             else:
-                # Fade from blue to darker blue
+                
                 intensity = 1 - (i / len(probs)) * 0.5
                 colors.append(ACCENT_BLUE if intensity > 0.7 else "#3d7ab8")
 
@@ -483,7 +465,7 @@ class MedicalDiagnosisApp:
             spine.set_color(BORDER)
             spine.set_linewidth(1.5)
 
-        # Enhanced bar labels
+        
         for bar, prob in zip(bars, probs):
             width = bar.get_width()
             if prob >= 0.1:
@@ -497,9 +479,7 @@ class MedicalDiagnosisApp:
         self.canvas_widget.draw()
 
 
-# ═════════════════════════════════════════════
-# Entry point
-# ═════════════════════════════════════════════
+
 def main():
     if not os.path.exists(DATASET_PATH):
         print(f"[ERROR] Dataset not found at: {DATASET_PATH}")
@@ -512,7 +492,7 @@ def main():
 
     root = tk.Tk()
 
-    # Dark title bar on Windows
+    
     try:
         root.wm_attributes("-alpha", 1.0)
     except Exception:
